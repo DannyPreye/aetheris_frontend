@@ -81,7 +81,7 @@ export function HeroSection() {
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-white/10 hover:bg-white/5 backdrop-blur-sm rounded-full px-10 h-16 text-lg font-semibold ">
+            <Button size="lg" variant="outline" className="border-white/10 hover:bg-white/5 hover:text-white text-black backdrop-blur-sm rounded-full px-10 h-16 text-lg font-semibold ">
               <Play className="w-5 h-5 mr-3 fill-current" />
               Watch Vision
             </Button>

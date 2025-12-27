@@ -9,10 +9,16 @@ export default withAuth(
         const path = req.nextUrl.pathname;
 
 
+
+
         if (path.startsWith("/dashboard")) {
             if (!token) {
                 return NextResponse.redirect(new URL("/login", req.url));
             }
+        }
+
+        if (token && path.startsWith("/login")) {
+            return NextResponse.redirect(new URL("/dashboard", req.url));
         }
 
         return NextResponse.next();

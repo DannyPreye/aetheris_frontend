@@ -9,8 +9,7 @@ import type { UserDependencies } from '../models/UserDependencies';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class UsersService
-{
+export class UsersService {
     /**
      * List users
      * @returns any List
@@ -18,8 +17,7 @@ export class UsersService
      */
     public static getApiV1Users(): CancelablePromise<{
         data?: Array<User>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/users',
@@ -35,8 +33,7 @@ export class UsersService
         requestBody: CreateUserInput,
     ): CancelablePromise<{
         data?: User;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/users',
@@ -54,8 +51,7 @@ export class UsersService
         id: string,
     ): CancelablePromise<{
         data?: User;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/users/{id}',
@@ -79,8 +75,7 @@ export class UsersService
         requestBody: CreateUserInput,
     ): CancelablePromise<{
         data?: User;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/users/{id}',
@@ -102,8 +97,7 @@ export class UsersService
      */
     public static deleteApiV1Users(
         id: string,
-    ): CancelablePromise<void>
-    {
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v1/users/{id}',
@@ -125,8 +119,7 @@ export class UsersService
         id: string,
     ): CancelablePromise<{
         data?: UserDependencies;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/users/{id}/dependencies',
@@ -150,8 +143,7 @@ export class UsersService
         requestBody: UpdateUserRoleInput,
     ): CancelablePromise<{
         data?: User;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/users/{id}/role',

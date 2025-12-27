@@ -9,8 +9,7 @@ import type { UpdateOrganizationInput } from '../models/UpdateOrganizationInput'
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class OrganizationsService
-{
+export class OrganizationsService {
     /**
      * List organizations
      * @returns any List
@@ -18,8 +17,7 @@ export class OrganizationsService
      */
     public static getApiV1Organizations(): CancelablePromise<{
         data?: Array<Organization>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations',
@@ -36,8 +34,7 @@ export class OrganizationsService
         requestBody: CreateOrganizationInput,
     ): CancelablePromise<{
         data?: Organization;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/organizations',
@@ -55,8 +52,7 @@ export class OrganizationsService
         id: string,
     ): CancelablePromise<{
         data?: Organization;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/{id}',
@@ -80,8 +76,7 @@ export class OrganizationsService
         requestBody: UpdateOrganizationInput,
     ): CancelablePromise<{
         data?: Organization;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/organizations/{id}',
@@ -103,8 +98,7 @@ export class OrganizationsService
      */
     public static deleteApiV1Organizations(
         id: string,
-    ): CancelablePromise<void>
-    {
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v1/organizations/{id}',
@@ -126,8 +120,7 @@ export class OrganizationsService
         id: string,
     ): CancelablePromise<{
         data?: AgentSettings;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/{id}/agent-settings',
@@ -151,8 +144,7 @@ export class OrganizationsService
         requestBody: AgentSettings,
     ): CancelablePromise<{
         data?: AgentSettings;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/organizations/{id}/agent-settings',
@@ -176,8 +168,7 @@ export class OrganizationsService
         id: string,
     ): CancelablePromise<{
         data?: Record<string, any>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/{id}/settings',
@@ -201,8 +192,7 @@ export class OrganizationsService
         requestBody: Record<string, any>,
     ): CancelablePromise<{
         data?: Record<string, any>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/v1/organizations/{id}/settings',
@@ -228,8 +218,7 @@ export class OrganizationsService
         data?: {
             url?: string;
         };
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/{id}/connect-whatsapp',
@@ -252,9 +241,7 @@ export class OrganizationsService
          */
         authUrl?: string;
         message?: string;
-    }>
-    {
-        console.log('OPENAPI_______', OpenAPI);
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/{id}/whatsapp/init-oauth',
@@ -281,8 +268,7 @@ export class OrganizationsService
          */
         state?: string;
         message?: string;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/whatsapp/callback',
@@ -306,8 +292,7 @@ export class OrganizationsService
             name?: string;
             timezone_id?: string;
         }>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/whatsapp/accounts',
@@ -333,8 +318,7 @@ export class OrganizationsService
             verifiedName?: string;
             qualityRating?: string;
         }>;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/whatsapp/phone-numbers',
@@ -372,8 +356,7 @@ export class OrganizationsService
         success?: boolean;
         data?: Organization;
         message?: string;
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/organizations/{id}/whatsapp/save-config',
@@ -398,8 +381,7 @@ export class OrganizationsService
         data?: {
             success?: boolean;
         };
-    }>
-    {
+    }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/organizations/oauth/meta/callback',

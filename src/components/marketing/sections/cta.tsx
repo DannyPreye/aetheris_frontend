@@ -52,7 +52,7 @@ export function CTASection() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="border-white/10 hover:bg-white/5 text-white rounded-full px-12 h-16 text-lg font-semibold backdrop-blur-sm transition-all">
+                <Button size="lg" variant="outline" className="border-white/10 hover:bg-white/5 text-black hover:text-white rounded-full px-12 h-16 text-lg font-semibold backdrop-blur-sm transition-all">
                   Consultation
                   <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>

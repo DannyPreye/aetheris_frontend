@@ -16,6 +16,7 @@ export type { AnalyticsPerformancePoint } from './models/AnalyticsPerformancePoi
 export type { ApiEnvelope } from './models/ApiEnvelope';
 export type { AuthLoginInput } from './models/AuthLoginInput';
 export type { AuthRegisterInput } from './models/AuthRegisterInput';
+export { Conversation } from './models/Conversation';
 export type { CreateCustomerInput } from './models/CreateCustomerInput';
 export type { CreateIntegrationInput } from './models/CreateIntegrationInput';
 export type { CreateOrganizationInput } from './models/CreateOrganizationInput';
@@ -24,6 +25,7 @@ export type { Customer } from './models/Customer';
 export { Document } from './models/Document';
 export type { ForgotPasswordInput } from './models/ForgotPasswordInput';
 export type { Integration } from './models/Integration';
+export { Message } from './models/Message';
 export type { Organization } from './models/Organization';
 export { OrgUserRole } from './models/OrgUserRole';
 export type { RefreshInput } from './models/RefreshInput';
@@ -40,6 +42,7 @@ export { UserRole } from './models/UserRole';
 
 export { AnalyticsService } from './services/AnalyticsService';
 export { AuthService } from './services/AuthService';
+export { ConversationsService } from './services/ConversationsService';
 export { CustomersService } from './services/CustomersService';
 export { DocumentsService } from './services/DocumentsService';
 export { HealthService } from './services/HealthService';
