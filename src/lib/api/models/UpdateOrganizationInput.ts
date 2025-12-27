@@ -2,5 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateOrganizationInput } from './CreateOrganizationInput';
-export type UpdateOrganizationInput = CreateOrganizationInput;
+/**
+ * All fields optional for partial updates
+ */
+export type UpdateOrganizationInput = {
+    name?: string;
+    description?: string;
+    industry?: string;
+    website?: string;
+    isActive?: boolean;
+};
+

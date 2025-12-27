@@ -10,17 +10,28 @@ import { request as __request } from '../core/request';
 export class DocumentsService {
     /**
      * Upload document (multipart to Cloudinary)
+     * Document type is automatically determined from file MIME type. uploadedBy is automatically set to the authenticated user.
      * @param formData
      * @returns any Uploaded
      * @throws ApiError
      */
     public static postApiV1DocumentsUpload(
         formData: {
+            /**
+             * Document file to upload
+             */
             file: Blob;
+            /**
+             * Organization ID
+             */
             organizationId: string;
+            /**
+             * Optional document name, defaults to original filename
+             */
             name?: string;
-            type?: string;
-            uploadedBy: string;
+            /**
+             * Optional document content
+             */
             content?: string;
         },
     ): CancelablePromise<{

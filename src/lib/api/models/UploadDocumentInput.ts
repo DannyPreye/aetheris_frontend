@@ -3,14 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UploadDocumentInput = {
+    /**
+     * Organization ID
+     */
     organizationId: string;
-    name: string;
-    originalName: string;
-    type: string;
-    fileUrl: string;
-    fileSize: number;
-    mimeType: string;
-    uploadedBy: string;
+    /**
+     * Optional document name, defaults to original filename
+     */
+    name?: string;
+    /**
+     * Optional document content
+     */
     content?: string;
 };
 

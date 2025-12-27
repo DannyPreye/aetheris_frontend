@@ -2,18 +2,26 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AgentSettings } from './AgentSettings';
 export type CreateOrganizationInput = {
+    /**
+     * Organization name
+     */
     name: string;
+    /**
+     * User ID of the organization owner
+     */
     ownerId: string;
+    /**
+     * Optional organization description
+     */
     description?: string;
+    /**
+     * Optional industry type
+     */
     industry?: string;
-    website?: string;
-    whatsappPhoneId?: string;
-    whatsappToken?: string;
-    whatsappBusinessId?: string;
+    /**
+     * Organization status
+     */
     isActive?: boolean;
-    settings?: Record<string, any>;
-    agentSettings?: AgentSettings;
 };
 

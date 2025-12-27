@@ -192,7 +192,7 @@ export const getHeaders = async (config: OpenAPIConfig, options: ApiRequestOptio
         const url = options.url || '';
 
         // Skip token retrieval for auth endpoints
-        if (!url.includes('auth') && !url.includes('login')) {
+        if (!url.includes('/auth') && !url.includes('login')) {
             console.log("inside if");
             const isServer = typeof window === 'undefined';
             let sessionToken: string | null = null;

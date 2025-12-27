@@ -1,9 +1,10 @@
 "use client"
 import { User, UserDependencies, UserDependenciesOrganization, UsersService } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useEffect, useState } from "react";
-import { LoadingScreen } from "../ui/LoadingScreen";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { LoadingScreen } from "../ui/LoadingScreen";
+import { OnboardingWizard } from "../onboarding/OnboardingWizard";
 
 interface UserDepsContextType {
     deps: UserDependencies;
@@ -46,9 +47,32 @@ export const UserDepsProvider = ({
     }, [data,]);
 
 
+    const hasOrgs = deps?.organizations && deps.organizations.length > 0;
+    const firstOrg = hasOrgs ? deps.organizations[0].organization : null;
+    const isUnconfigured = firstOrg && (!firstOrg.whatsappPhoneId || !firstOrg.whatsappToken || !firstOrg.whatsappBusinessId);
+
+
     return (
         <UserDepsContext.Provider value={{ deps: deps as UserDependencies, isLoading, error, refetch }}>
-            {isLoading ? <LoadingScreen /> : children}
+            {isLoading ? (
+                <LoadingScreen />
+            ) : (!hasOrgs || isUnconfigured) ? (
+                <OnboardingWizard
+                    initialStep={!hasOrgs ? 'ORG_CREATION' : 'WHATSAPP_CONNECT'}
+                    organization={firstOrg || undefined}
+                />
+            ) : (
+                children
+            )}
         </UserDepsContext.Provider>
     );
+};
+
+
+export const useUserDeps = () => {
+    const context = useContext(UserDepsContext);
+    if (!context) {
+        throw new Error('useUserDeps must be used within a UserDepsProvider');
+    }
+    return context;
 };

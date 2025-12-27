@@ -8,9 +8,6 @@ export default withAuth(
         const token = req.nextauth.token;
         const path = req.nextUrl.pathname;
 
-        console.log("This is the token", token);
-        console.log("This is the path", path);
-
 
         if (path.startsWith("/dashboard")) {
             if (!token) {
