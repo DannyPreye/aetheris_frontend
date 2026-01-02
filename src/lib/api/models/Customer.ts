@@ -12,6 +12,10 @@ export type Customer = {
     metadata?: Record<string, any>;
     tags?: Array<string>;
     isBlocked?: boolean;
+    /**
+     * True once the customer has at least one conversation
+     */
+    hasStartedConversation?: boolean;
     createdAt?: string;
     updatedAt?: string;
 };

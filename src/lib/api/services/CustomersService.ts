@@ -58,6 +58,38 @@ export class CustomersService {
         });
     }
     /**
+     * Bulk create customers
+     * Owner-only: Trigger AI outreach to all new customers (hasStartedConversation=false). Agent crafts message from knowledge base and sends via WhatsApp.
+     * @param requestBody
+     * @returns any Triggered
+     * @throws ApiError
+     */
+    public static postApiV1CustomersBulk(
+        requestBody: {
+            organizationId: string;
+            /**
+             * Optional hint or theme for the outreach message
+             */
+            message?: string;
+        },
+    ): CancelablePromise<{
+        data?: {
+            count?: number;
+        };
+    }> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/customers/bulk',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+            },
+        });
+    }
+    /**
      * Get customer
      * Members and owners can fetch customers in their organizations.
      * @param id

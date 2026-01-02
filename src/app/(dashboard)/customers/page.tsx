@@ -67,11 +67,21 @@ const getStageColor = (stage?: string) => {
   }
 };
 
+import { CreateCustomerDialog } from "./_components/CreateCustomerDialog";
+import { BulkImportDialog } from "./_components/BulkImportDialog";
+import { OutreachDialog } from "./_components/OutreachDialog";
+
+// ... (existing imports)
+
 export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const { deps } = useUserDeps();
   // @ts-ignore
   const organizationId = deps?.organizations?.[0]?.organization?._id;
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [outreachOpen, setOutreachOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["customers", organizationId],
@@ -89,6 +99,14 @@ export default function CustomersPage() {
 
   return (
     <div className="space-y-12 pb-12">
+      {organizationId && (
+        <>
+            <CreateCustomerDialog open={createOpen} onOpenChange={setCreateOpen} organizationId={organizationId} />
+            <BulkImportDialog open={importOpen} onOpenChange={setImportOpen} organizationId={organizationId} />
+            <OutreachDialog open={outreachOpen} onOpenChange={setOutreachOpen} organizationId={organizationId} />
+        </>
+      )}
+
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between px-4 lg:px-0">
         <div>
            <Badge variant="outline" className="mb-4 border-emerald-500/30 text-emerald-400 bg-emerald-500/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">Customer Registry</Badge>
@@ -98,15 +116,33 @@ export default function CustomersPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-white/5 h-11 lg:h-12 rounded-xl px-4 lg:px-6 text-xs lg:text-sm">
-            <Download className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
-            <span className="hidden sm:inline">Export Cluster</span>
-            <span className="sm:hidden">Export</span>
+          <Button
+            variant="outline"
+            className="bg-transparent border-white/10 text-white hover:bg-white/5 h-11 lg:h-12 rounded-xl px-4 lg:px-6 text-xs lg:text-sm"
+            onClick={() => setOutreachOpen(true)}
+          >
+            <Zap className="w-4 h-4 lg:w-5 lg:h-5 mr-2 text-purple-400" />
+            <span className="hidden sm:inline">Launch Outreach</span>
+            <span className="sm:hidden">Outreach</span>
           </Button>
-          <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 lg:h-12 rounded-xl px-4 lg:px-6 shadow-xl shadow-emerald-500/20 group text-xs lg:text-sm">
+
+          <Button
+            variant="outline"
+            className="bg-transparent border-white/10 text-white hover:bg-white/5 h-11 lg:h-12 rounded-xl px-4 lg:px-6 text-xs lg:text-sm"
+            onClick={() => setImportOpen(true)}
+          >
+            <Download className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
+            <span className="hidden sm:inline">Import Excel</span>
+            <span className="sm:hidden">Import</span>
+          </Button>
+
+          <Button
+            className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold h-11 lg:h-12 rounded-xl px-4 lg:px-6 shadow-xl shadow-emerald-500/20 group text-xs lg:text-sm"
+            onClick={() => setCreateOpen(true)}
+          >
             <Plus className="w-4 h-4 lg:w-5 lg:h-5 mr-2 group-hover:rotate-90 transition-transform" />
-            <span className="hidden sm:inline">Integrate Node</span>
-            <span className="sm:hidden">Integrate</span>
+            <span className="hidden sm:inline">Add Node</span>
+            <span className="sm:hidden">Add</span>
           </Button>
         </div>
       </div>

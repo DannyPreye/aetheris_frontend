@@ -10,5 +10,9 @@ export type CreateCustomerInput = {
     language?: string;
     metadata?: Record<string, any>;
     tags?: Array<string>;
+    /**
+     * Optional flag to mark if the customer has started a conversation
+     */
+    hasStartedConversation?: boolean;
 };
 
