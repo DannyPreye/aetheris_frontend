@@ -79,7 +79,7 @@ export const WhatsAppConnectStep: React.FC<WhatsAppConnectStepProps> = ({ organi
         await OrganizationsService.postApiV1OrganizationsWhatsappInitBaileys(organization.id || (organization as any)._id)
         setBaileysInit(true)
     } catch (error) {
-        console.error("Failed to init baileys:", error)
+        console.log("Failed to init baileys:", error)
         toast.error("Failed to initialize Linked Device connection.")
         setMethod('selection')
     }
