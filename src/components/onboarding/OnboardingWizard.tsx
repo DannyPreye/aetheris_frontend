@@ -52,8 +52,12 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   }
 
   const handleWhatsAppConnected = (state: string) => {
-    setOauthState(state)
-    setStep('WHATSAPP_SELECT')
+    if (state === 'baileys_connected') {
+       refetch()
+    } else {
+      setOauthState(state)
+      setStep('WHATSAPP_SELECT')
+    }
   }
 
   const handleConfigSaved = () => {

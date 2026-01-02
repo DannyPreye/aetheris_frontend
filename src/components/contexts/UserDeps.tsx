@@ -28,7 +28,7 @@ export const UserDepsProvider = ({
     const { data: session } = useSession();
 
 
-    console.log("This is the session",session);
+
 
 
 
@@ -49,7 +49,7 @@ export const UserDepsProvider = ({
 
     const hasOrgs = deps?.organizations && deps.organizations.length > 0;
     const firstOrg = hasOrgs ? deps.organizations[0].organization : null;
-    const isUnconfigured = firstOrg && (!firstOrg.whatsappPhoneId || !firstOrg.whatsappToken || !firstOrg.whatsappBusinessId);
+    const isUnconfigured = firstOrg?.whatsappConnectionStatus !== "connected"
 
 
     return (
@@ -76,3 +76,4 @@ export const useUserDeps = () => {
     }
     return context;
 };
+

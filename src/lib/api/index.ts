@@ -26,7 +26,7 @@ export { Document } from './models/Document';
 export type { ForgotPasswordInput } from './models/ForgotPasswordInput';
 export type { Integration } from './models/Integration';
 export { Message } from './models/Message';
-export type { Organization } from './models/Organization';
+export { Organization } from './models/Organization';
 export { OrgUserRole } from './models/OrgUserRole';
 export type { RefreshInput } from './models/RefreshInput';
 export type { ResetPasswordInput } from './models/ResetPasswordInput';

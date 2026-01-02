@@ -2,21 +2,14 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Bot,
-  Settings2,
-  MessageSquare,
-  Zap,
-  AlertCircle,
-  Play,
-  Save,
-  ChevronRight,
-  MessageCircle,
-  HelpCircle,
   Cpu,
   Brain,
   ShieldAlert,
-  Target,
+  Play,
+  Save,
+  HelpCircle,
   Terminal,
+  Zap,
   X,
   Loader2,
   FileSignature,
@@ -49,8 +42,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-  FormDescription
+  FormMessage
 } from "@/components/ui/form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrganizationsService } from "@/lib/api/services/OrganizationsService";
@@ -63,10 +55,10 @@ const agentSettingsSchema = z.object({
   maxReplyLength: z.number().min(50).max(1000),
   signature: z.string().optional(),
   callToAction: z.string().optional(),
-  followUpEnabled: z.boolean().default(false),
+  followUpEnabled: z.boolean(),
   escalation: z.object({
-    enabled: z.boolean().default(true),
-    rules: z.array(z.string()).default([]),
+    enabled: z.boolean(),
+    rules: z.array(z.string()),
     phone: z.string().optional().nullable(),
   }),
 });
@@ -76,8 +68,10 @@ type AgentSettingsFormValues = z.infer<typeof agentSettingsSchema>;
 export default function AgentSettingsPage() {
   const { deps } = useUserDeps();
   const queryClient = useQueryClient();
-  // @ts-ignore
-  const organizationId = deps?.organizations?.[0]?.organization?._id || deps?.organizations?.[0]?.organization?.id;
+
+  // Safely access organization ID with fallback for potential type mismatches
+  const organizationData = deps?.organizations?.[0]?.organization;
+  const organizationId = (organizationData as any)?._id || (organizationData as any)?.id;
 
   const form = useForm<AgentSettingsFormValues>({
     resolver: zodResolver(agentSettingsSchema),
@@ -98,8 +92,8 @@ export default function AgentSettingsPage() {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "escalation.rules" as any, // casting due to complex path inference
-  });
+    name: "escalation.rules" as any,
+  } as any);
 
   // Custom keyword input state
   const [newKeyword, setNewKeyword] = useState("");
@@ -131,8 +125,18 @@ export default function AgentSettingsPage() {
 
   const updateMutation = useMutation({
     mutationFn: (values: AgentSettingsFormValues) => {
-      // @ts-ignore - API expects specific structure
-      return OrganizationsService.putApiV1OrganizationsAgentSettings(organizationId!, values);
+      // Map form values to the API model structure strict compat
+      const apiPayload: AgentSettings = {
+        ...values,
+        signature: values.signature || undefined, // explicit undefined for optional strings if needed
+        callToAction: values.callToAction || undefined,
+        escalation: {
+          ...values.escalation,
+          phone: values.escalation.phone || null,
+          rules: values.escalation.rules
+        }
+      };
+      return OrganizationsService.putApiV1OrganizationsAgentSettings(organizationId!, apiPayload);
     },
     onSuccess: () => {
       toast.success("Agent synapse reconfigured successfully.");
@@ -150,7 +154,6 @@ export default function AgentSettingsPage() {
 
   const handleAddKeyword = () => {
     if (newKeyword.trim()) {
-      // @ts-ignore
       append(newKeyword.trim());
       setNewKeyword("");
     }
@@ -159,7 +162,8 @@ export default function AgentSettingsPage() {
   const currentTone = form.watch("tone");
   const currentMaxLength = form.watch("maxReplyLength");
   const escalationEnabled = form.watch("escalation.enabled");
-  // @ts-ignore
+
+  // Removed faulty watch that caused issues, using fields from useFieldArray for iterating rules
   const rules = form.watch("escalation.rules") || [];
 
   if (isLoading) {

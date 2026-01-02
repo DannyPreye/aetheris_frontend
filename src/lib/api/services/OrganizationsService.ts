@@ -368,6 +368,123 @@ export class OrganizationsService {
         });
     }
     /**
+     * Initialize Baileys/QR Code connection (Alternative to OAuth)
+     * Initiates WhatsApp connection using Baileys library with QR code scanning. Sets whatsappAuthType to "baileys" and whatsappConnectionStatus to "pending".
+     * @param id
+     * @returns any Baileys connection initialized, QR code ready
+     * @throws ApiError
+     */
+    public static postApiV1OrganizationsWhatsappInitBaileys(
+        id: string,
+    ): CancelablePromise<{
+        success?: boolean;
+        message?: string;
+    }> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/organizations/{id}/whatsapp/init-baileys',
+            path: {
+                'id': id,
+            },
+            errors: {
+                400: `WhatsApp already connected`,
+                404: `Organization not found`,
+            },
+        });
+    }
+    /**
+     * Get Baileys QR Code for scanning
+     * Retrieves the QR code that the user needs to scan with WhatsApp. Call after initializing Baileys connection.
+     * @param id
+     * @returns any QR code generated
+     * @throws ApiError
+     */
+    public static getApiV1OrganizationsWhatsappQrcode(
+        id: string,
+    ): CancelablePromise<{
+        success?: boolean;
+        /**
+         * QR code data/image
+         */
+        qrCode?: string;
+        message?: string;
+    }> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/organizations/{id}/whatsapp/qrcode',
+            path: {
+                'id': id,
+            },
+            errors: {
+                400: `QR code not available`,
+                404: `Organization not found`,
+            },
+        });
+    }
+    /**
+     * Disconnect WhatsApp
+     * Disconnects WhatsApp from the organization. Works for both OAuth and Baileys connections. Sets whatsappConnectionStatus to "disconnected".
+     * @param id
+     * @returns any WhatsApp disconnected successfully
+     * @throws ApiError
+     */
+    public static deleteApiV1OrganizationsWhatsappDisconnect(
+        id: string,
+    ): CancelablePromise<{
+        success?: boolean;
+        message?: string;
+    }> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/organizations/{id}/whatsapp/disconnect',
+            path: {
+                'id': id,
+            },
+            errors: {
+                404: `Organization not found`,
+            },
+        });
+    }
+    /**
+     * Check WhatsApp Connection Status
+     * Returns the current authentication type and connection status for the organization's WhatsApp integration.
+     * @param id
+     * @returns any WhatsApp status retrieved
+     * @throws ApiError
+     */
+    public static getApiV1OrganizationsWhatsappStatus(
+        id: string,
+    ): CancelablePromise<{
+        success?: boolean;
+        /**
+         * Authentication method used
+         */
+        authType?: 'oauth' | 'baileys';
+        /**
+         * Current connection status
+         */
+        connectionStatus?: 'connected' | 'disconnected' | 'pending';
+        /**
+         * Whether WhatsApp is currently connected
+         */
+        isConnected?: boolean;
+        /**
+         * Whether WhatsApp is currently disconnected
+         */
+        isDisconnected?: boolean;
+    }> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/organizations/{id}/whatsapp/status',
+            path: {
+                'id': id,
+            },
+            errors: {
+                404: `Organization not found`,
+            },
+        });
+    }
+    /**
      * Callback endpoint for Meta OAuth (exchanges code for token and stores IDs)
      * @param code
      * @param state
