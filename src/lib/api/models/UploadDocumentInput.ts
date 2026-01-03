@@ -4,10 +4,6 @@
 /* eslint-disable */
 export type UploadDocumentInput = {
     /**
-     * Organization ID
-     */
-    organizationId: string;
-    /**
      * Optional document name, defaults to original filename
      */
     name?: string;

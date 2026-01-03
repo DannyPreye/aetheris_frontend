@@ -11,20 +11,18 @@ export class DocumentsService {
     /**
      * Upload document (multipart to Cloudinary)
      * Document type is automatically determined from file MIME type. uploadedBy is automatically set to the authenticated user.
+     * @param organizationId Organization ID
      * @param formData
      * @returns any Uploaded
      * @throws ApiError
      */
-    public static postApiV1DocumentsUpload(
+    public static postApiV1OrganizationsDocumentsUpload(
+        organizationId: string,
         formData: {
             /**
              * Document file to upload
              */
             file: Blob;
-            /**
-             * Organization ID
-             */
-            organizationId: string;
             /**
              * Optional document name, defaults to original filename
              */
@@ -39,99 +37,125 @@ export class DocumentsService {
     }> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/documents/upload',
+            url: '/api/v1/organizations/{organizationId}/documents/upload',
+            path: {
+                'organizationId': organizationId,
+            },
             formData: formData,
             mediaType: 'multipart/form-data',
         });
     }
     /**
-     * List documents
+     * List documents for organization
+     * @param organizationId Organization ID
      * @returns any List
      * @throws ApiError
      */
-    public static getApiV1Documents(): CancelablePromise<{
+    public static getApiV1OrganizationsDocuments(
+        organizationId: string,
+    ): CancelablePromise<{
         data?: Array<Document>;
     }> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/documents',
+            url: '/api/v1/organizations/{organizationId}/documents',
+            path: {
+                'organizationId': organizationId,
+            },
         });
     }
     /**
      * Get document
-     * @param id
+     * @param organizationId Organization ID
+     * @param id Document ID
      * @returns any Doc
      * @throws ApiError
      */
-    public static getApiV1Documents1(
+    public static getApiV1OrganizationsDocuments1(
+        organizationId: string,
         id: string,
     ): CancelablePromise<{
         data?: Document;
     }> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/documents/{id}',
+            url: '/api/v1/organizations/{organizationId}/documents/{id}',
             path: {
+                'organizationId': organizationId,
                 'id': id,
             },
         });
     }
     /**
      * Delete document
-     * @param id
+     * @param organizationId Organization ID
+     * @param id Document ID
      * @returns void
      * @throws ApiError
      */
-    public static deleteApiV1Documents(
+    public static deleteApiV1OrganizationsDocuments(
+        organizationId: string,
         id: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/documents/{id}',
+            url: '/api/v1/organizations/{organizationId}/documents/{id}',
             path: {
+                'organizationId': organizationId,
                 'id': id,
             },
         });
     }
     /**
      * Reprocess document
-     * @param id
+     * @param organizationId Organization ID
+     * @param id Document ID
      * @returns any Queued
      * @throws ApiError
      */
-    public static postApiV1DocumentsReprocess(
+    public static postApiV1OrganizationsDocumentsReprocess(
+        organizationId: string,
         id: string,
     ): CancelablePromise<{
         data?: Document;
     }> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/documents/{id}/reprocess',
+            url: '/api/v1/organizations/{organizationId}/documents/{id}/reprocess',
             path: {
+                'organizationId': organizationId,
                 'id': id,
             },
         });
     }
     /**
-     * Processing status counts
+     * Processing status counts for organization
+     * @param organizationId Organization ID
      * @returns any Status
      * @throws ApiError
      */
-    public static getApiV1DocumentsStatus(): CancelablePromise<{
+    public static getApiV1OrganizationsDocumentsStatus(
+        organizationId: string,
+    ): CancelablePromise<{
         data?: Record<string, number>;
     }> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/documents/status',
+            url: '/api/v1/organizations/{organizationId}/documents/status',
+            path: {
+                'organizationId': organizationId,
+            },
         });
     }
     /**
-     * Bulk upload documents
+     * Bulk upload documents for organization
+     * @param organizationId Organization ID
      * @param requestBody
      * @returns any Uploaded
      * @throws ApiError
      */
-    public static postApiV1DocumentsBulkUpload(
+    public static postApiV1OrganizationsDocumentsBulkUpload(
+        organizationId: string,
         requestBody: {
             items?: Array<UploadDocumentInput>;
         },
@@ -140,7 +164,10 @@ export class DocumentsService {
     }> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/documents/bulk-upload',
+            url: '/api/v1/organizations/{organizationId}/documents/bulk-upload',
+            path: {
+                'organizationId': organizationId,
+            },
             body: requestBody,
             mediaType: 'application/json',
         });

@@ -23,7 +23,9 @@ import {
   Check,
   CheckCheck,
   MoreVertical,
-  ChevronLeft
+  ChevronLeft,
+  TrendingUp,
+  FileText
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow, format } from "date-fns";
@@ -137,8 +139,8 @@ export default function CustomerDetailsPage({ params }: { params: Promise<{ id: 
               <h1 className="text-xl lg:text-3xl font-bold tracking-tight text-white uppercase truncate">
                 {customer.name || customer.whatsappNumber}
               </h1>
-              <Badge variant="outline" className={cn("px-2 py-0 lg:px-3 lg:py-0.5 capitalize text-[9px] lg:text-[10px] font-bold border rounded-full whitespace-nowrap", getStageColor(customer.metadata?.stage))}>
-                {customer.metadata?.stage || "lead"}
+              <Badge variant="outline" className={cn("px-2 py-0 lg:px-3 lg:py-0.5 capitalize text-[9px] lg:text-[10px] font-bold border rounded-full whitespace-nowrap", getStageColor((customer as any).lifecycleStage))}>
+                {(customer as any).lifecycleStage || "lead"}
               </Badge>
             </div>
             <p className="text-zinc-500 font-light text-xs lg:text-sm italic truncate">{customer.whatsappNumber}</p>
@@ -205,13 +207,13 @@ export default function CustomerDetailsPage({ params }: { params: Promise<{ id: 
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center px-1">
-                  <span className="text-[9px] lg:text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Neural Resonance</span>
-                  <span className="text-xs font-bold text-emerald-400">{customer.metadata?.score || 50}%</span>
+                  <span className="text-[9px] lg:text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Prospect Score</span>
+                  <span className="text-xs font-bold text-emerald-400">{Math.round(((customer as any).prospectScore || 0) * 100)}%</span>
                 </div>
                 <div className="h-1.5 lg:h-2 w-full bg-black rounded-full overflow-hidden border border-white/5">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: `${customer.metadata?.score || 50}%` }}
+                    animate={{ width: `${Math.round(((customer as any).prospectScore || 0) * 100)}%` }}
                     transition={{ duration: 1.5, ease: "easeOut" }}
                     className="h-full bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)]"
                   />
@@ -231,28 +233,58 @@ export default function CustomerDetailsPage({ params }: { params: Promise<{ id: 
             </CardContent>
           </Card>
 
-          {/* Additional Metadata */}
+          {/* Follow-Up Intelligence */}
           <Card className="bg-zinc-900/40 border-white/5 rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden backdrop-blur-3xl">
             <CardHeader className="p-6 lg:p-8 pb-4">
               <CardTitle className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-                <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-amber-500" />
-                Extended Protocols
+                <TrendingUp className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-blue-500" />
+                Follow-Up Intelligence
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 lg:p-8 pt-0">
-              <div className="grid grid-cols-2 gap-3 lg:gap-4">
-                {customer.metadata && Object.entries(customer.metadata).map(([key, value]) => {
-                  if (key === 'stage' || key === 'score') return null;
-                  return (
+            <CardContent className="p-6 lg:p-8 pt-0 space-y-4">
+              <div className="flex items-center justify-between p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-black/40 border border-white/5">
+                <div className="flex items-center gap-2 lg:gap-3">
+                  <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400">
+                    <MessageSquare className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </div>
+                  <span className="text-[10px] lg:text-xs font-medium text-zinc-500 uppercase tracking-tighter">Follow-Ups Sent</span>
+                </div>
+                <span className="text-xs lg:text-sm font-bold text-white">{(customer as any).followUpSentCount || 0}</span>
+              </div>
+              {(customer as any).followUpNotes && (
+                <div className="p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-black/20 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-3 h-3 text-zinc-600" />
+                    <p className="text-[9px] lg:text-[10px] font-bold text-zinc-600 uppercase">Notes</p>
+                  </div>
+                  <p className="text-[10px] lg:text-xs text-zinc-400 leading-relaxed">{(customer as any).followUpNotes}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Additional Metadata */}
+          {customer.metadata && Object.keys(customer.metadata).length > 0 && (
+            <Card className="bg-zinc-900/40 border-white/5 rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden backdrop-blur-3xl">
+              <CardHeader className="p-6 lg:p-8 pb-4">
+                <CardTitle className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
+                  <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-amber-500" />
+                  Extended Protocols
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 lg:p-8 pt-0">
+                <div className="grid grid-cols-2 gap-3 lg:gap-4">
+                  {Object.entries(customer.metadata).map(([key, value]) => (
                     <div key={key} className="p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-black/20 border border-white/5 overflow-hidden">
                       <p className="text-[9px] lg:text-[10px] font-bold text-zinc-600 uppercase mb-1 truncate">{key}</p>
                       <p className="text-xs lg:text-sm font-bold text-white truncate">{String(value)}</p>
                     </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
         </div>
 
         {/* Right Column: Conversations & Messages */}
@@ -465,6 +497,7 @@ export default function CustomerDetailsPage({ params }: { params: Promise<{ id: 
           </div>
         </div>
       </div>
-    </div>
+
+
   );
 }

@@ -75,7 +75,7 @@ export default function KnowledgeBasePage() {
   // Fetch Documents
   const { data: documentsData, isLoading, refetch } = useQuery({
     queryKey: ["documents", organizationId],
-    queryFn: () => DocumentsService.getApiV1Documents(),
+    queryFn: () => DocumentsService.getApiV1OrganizationsDocuments(organizationId),
     enabled: !!organizationId,
   });
 
@@ -84,11 +84,13 @@ export default function KnowledgeBasePage() {
   // Upload Document Mutation
   const uploadMutation = useMutation({
     mutationFn: (data: { file: File; name?: string }) => {
-      return DocumentsService.postApiV1DocumentsUpload({
-        file: data.file as any,
-        organizationId: organizationId,
-        name: data.name || data.file.name
-      });
+      return DocumentsService.postApiV1OrganizationsDocumentsUpload(
+        organizationId,
+        {
+          file: data.file,
+          name: data.name || data.file.name
+        }
+      );
     },
     onSuccess: () => {
       toast.success("Neural ingestion complete. Synthesis starting.");
@@ -105,7 +107,7 @@ export default function KnowledgeBasePage() {
   // Delete Document Mutation
   const deleteMutation = useMutation({
     mutationFn: (id: string) => {
-      return DocumentsService.deleteApiV1Documents(id);
+      return DocumentsService.deleteApiV1OrganizationsDocuments(organizationId, id);
     },
     onSuccess: () => {
       toast.success("Document purged from neural matrix.");
@@ -415,8 +417,7 @@ export default function KnowledgeBasePage() {
                              <DropdownMenuSeparator className="bg-white/5" />
                              <DropdownMenuItem
                               className="text-rose-400 focus:bg-rose-500/10 focus:text-rose-400 gap-3 h-10 rounded-lg transition-all font-bold cursor-pointer"
-                              // @ts-ignore
-                              onClick={() => deleteMutation.mutate(doc._id)}
+                              onClick={() => deleteMutation.mutate(doc.id)}
                               disabled={deleteMutation.isPending}
                              >
                                {deleteMutation.isPending ? (
