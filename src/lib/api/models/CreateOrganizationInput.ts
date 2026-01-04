@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type CreateOrganizationInput = {
     /**
-     * Organization name
+     * Organization name (used in agent default settings)
      */
     name: string;
     /**

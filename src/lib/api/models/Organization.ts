@@ -23,6 +23,9 @@ export type Organization = {
     isActive: boolean;
     ownerId: string;
     settings?: Record<string, any>;
+    /**
+     * AI agent personality and behavior settings including name, gender, language, tone, and escalation rules
+     */
     agentSettings?: AgentSettings;
     createdAt?: string;
     updatedAt?: string;

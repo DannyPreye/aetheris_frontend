@@ -10,21 +10,32 @@ import { request as __request } from '../core/request';
 export class IntegrationsService {
     /**
      * List integrations
-     * @returns any List
+     * List all integrations, optionally filtered by organizationId and/or type
+     * @param organizationId Filter by organization ID
+     * @param type Filter by integration type
+     * @returns any List of integrations
      * @throws ApiError
      */
-    public static getApiV1Integrations(): CancelablePromise<{
+    public static getApiV1Integrations(
+        organizationId?: string,
+        type?: 'calendly' | 'stripe' | 'slack' | 'crm' | 'email' | 'webhook' | 'zapier' | 'custom',
+    ): CancelablePromise<{
         data?: Array<Integration>;
     }> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/integrations',
+            query: {
+                'organizationId': organizationId,
+                'type': type,
+            },
         });
     }
     /**
      * Create integration
+     * Create a new integration. Required config fields vary by type.
      * @param requestBody
-     * @returns any Created
+     * @returns any Integration created successfully
      * @throws ApiError
      */
     public static postApiV1Integrations(
@@ -37,12 +48,16 @@ export class IntegrationsService {
             url: '/api/v1/integrations',
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                400: `Bad request - missing required fields or invalid config`,
+            },
         });
     }
     /**
-     * Get integration
-     * @param id
-     * @returns any Integration
+     * Get integration by ID
+     * Retrieve a specific integration by its ID
+     * @param id Integration ID
+     * @returns any Integration details
      * @throws ApiError
      */
     public static getApiV1Integrations1(
@@ -56,13 +71,17 @@ export class IntegrationsService {
             path: {
                 'id': id,
             },
+            errors: {
+                404: `Integration not found`,
+            },
         });
     }
     /**
      * Update integration
-     * @param id
+     * Update an existing integration. All fields are optional.
+     * @param id Integration ID
      * @param requestBody
-     * @returns any Updated
+     * @returns any Integration updated successfully
      * @throws ApiError
      */
     public static putApiV1Integrations(
@@ -79,11 +98,16 @@ export class IntegrationsService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                400: `Bad request - invalid config for type`,
+                404: `Integration not found`,
+            },
         });
     }
     /**
      * Delete integration
-     * @param id
+     * Delete an integration permanently
+     * @param id Integration ID
      * @returns void
      * @throws ApiError
      */
@@ -96,26 +120,32 @@ export class IntegrationsService {
             path: {
                 'id': id,
             },
+            errors: {
+                404: `Integration not found`,
+            },
         });
     }
     /**
-     * Test integration
-     * @param id
-     * @returns any Result
+     * Test integration connection
+     * Verify that the integration credentials are valid and the connection works. Updates the lastTestedAt and testStatus fields.
+     * @param id Integration ID
+     * @returns any Test result
      * @throws ApiError
      */
     public static postApiV1IntegrationsTest(
         id: string,
     ): CancelablePromise<{
-        data?: {
-            success?: boolean;
-        };
+        success?: boolean;
+        message?: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/integrations/{id}/test',
             path: {
                 'id': id,
+            },
+            errors: {
+                404: `Integration not found`,
             },
         });
     }

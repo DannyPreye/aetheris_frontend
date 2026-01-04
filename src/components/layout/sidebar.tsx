@@ -41,7 +41,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const mainNavItems = [
   { title: "Dashboard", icon: LayoutDashboard, href: "/dashboard", accent: "emerald" },
-  { title: "Conversations", icon: MessageSquare, href: "/conversations", accent: "emerald" },
+  // { title: "Conversations", icon: MessageSquare, href: "/conversations", accent: "emerald" },
   { title: "Customers", icon: Users, href: "/customers", accent: "emerald" },
   { title: "Knowledge Base", icon: Database, href: "/knowledge-base", accent: "emerald" },
   { title: "Analytics", icon: BarChart3, href: "/analytics", accent: "emerald" },
@@ -51,7 +51,7 @@ const settingsNavItems = [
   { title: "Organization", icon: Building2, href: "/settings/organization", accent: "blue" },
   { title: "AI Agent", icon: Bot, href: "/settings/agent", accent: "blue" },
   { title: "Integrations", icon: Plug, href: "/integrations", accent: "blue" },
-  { title: "Users", icon: Users, href: "/settings/users", accent: "blue" },
+  // { title: "Users", icon: Users, href: "/settings/users", accent: "blue" },
 ];
 
 export function Sidebar() {

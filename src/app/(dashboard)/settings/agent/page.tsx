@@ -13,7 +13,11 @@ import {
   X,
   Loader2,
   FileSignature,
-  Megaphone
+  Megaphone,
+  User,
+  Globe,
+  Image,
+  Calendar
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -50,6 +54,11 @@ import { useUserDeps } from "@/components/contexts/UserDeps";
 import { AgentSettings } from "@/lib/api/models/AgentSettings";
 
 const agentSettingsSchema = z.object({
+  agentName: z.string().min(1, "Agent name is required.").max(50, "Agent name too long."),
+  agentGender: z.enum([AgentSettings.agentGender.MALE, AgentSettings.agentGender.FEMALE, AgentSettings.agentGender.NEUTRAL]),
+  agentAge: z.number().min(18).max(100).optional(),
+  agentAvatar: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  defaultLanguage: z.string().min(2, "Language code required").max(10),
   systemPrompt: z.string().min(10, "System prompt must be at least 10 characters.").max(8000, "System prompt too long."),
   tone: z.enum([AgentSettings.tone.CONCISE, AgentSettings.tone.FRIENDLY, AgentSettings.tone.FORMAL, AgentSettings.tone.PLAYFUL]),
   maxReplyLength: z.number().min(50).max(1000),
@@ -76,6 +85,11 @@ export default function AgentSettingsPage() {
   const form = useForm<AgentSettingsFormValues>({
     resolver: zodResolver(agentSettingsSchema),
     defaultValues: {
+      agentName: "AI Assistant",
+      agentGender: AgentSettings.agentGender.NEUTRAL,
+      agentAge: undefined,
+      agentAvatar: "",
+      defaultLanguage: "en",
       systemPrompt: "",
       tone: AgentSettings.tone.FORMAL,
       maxReplyLength: 250,
@@ -108,6 +122,11 @@ export default function AgentSettingsPage() {
     if (settingsData?.data) {
       const data = settingsData.data;
       form.reset({
+        agentName: data.agentName || "AI Assistant",
+        agentGender: data.agentGender || AgentSettings.agentGender.NEUTRAL,
+        agentAge: data.agentAge,
+        agentAvatar: data.agentAvatar || "",
+        defaultLanguage: data.defaultLanguage || "en",
         systemPrompt: data.systemPrompt || "",
         tone: data.tone || AgentSettings.tone.FORMAL,
         maxReplyLength: data.maxReplyLength || 250,
@@ -128,6 +147,11 @@ export default function AgentSettingsPage() {
       // Map form values to the API model structure strict compat
       const apiPayload: AgentSettings = {
         ...values,
+        agentName: values.agentName,
+        agentGender: values.agentGender,
+        agentAge: values.agentAge,
+        agentAvatar: values.agentAvatar || undefined,
+        defaultLanguage: values.defaultLanguage,
         signature: values.signature || undefined, // explicit undefined for optional strings if needed
         callToAction: values.callToAction || undefined,
         escalation: {
@@ -209,6 +233,133 @@ export default function AgentSettingsPage() {
           <div className="grid gap-10 lg:grid-cols-12">
             {/* Personality Config */}
             <div className="lg:col-span-8 space-y-10">
+              {/* Agent Persona Card */}
+              <Card className="bg-zinc-900/40 backdrop-blur-3xl border-white/5 rounded-[2.5rem] overflow-hidden group">
+                <CardHeader className="p-10 pb-4 border-b border-white/5 bg-white/[0.01]">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <CardTitle className="text-2xl font-bold text-white tracking-tight uppercase">Agent Persona</CardTitle>
+                      <CardDescription className="text-zinc-500 font-light">Define the identity and personality attributes of your AI agent.</CardDescription>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-2xl">
+                      <User className="w-6 h-6" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-10 space-y-8">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <FormField
+                      control={form.control}
+                      name="agentName"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4 text-zinc-500" />
+                            <FormLabel className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Agent Name</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Input {...field} placeholder="e.g. Aria, Max, or Custom Name" className="bg-black/40 border-white/5 h-12 rounded-xl focus:border-emerald-500/50 text-white placeholder:text-zinc-700 font-medium" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="agentGender"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-1">Agent Gender</FormLabel>
+                          <FormControl>
+                            <div className="grid grid-cols-3 gap-2">
+                              {[
+                                { label: "Male", value: AgentSettings.agentGender.MALE },
+                                { label: "Female", value: AgentSettings.agentGender.FEMALE },
+                                { label: "Neutral", value: AgentSettings.agentGender.NEUTRAL }
+                              ].map((g) => (
+                                <button
+                                  type="button"
+                                  key={g.value}
+                                  onClick={() => field.onChange(g.value)}
+                                  className={cn(
+                                    "px-4 py-3 rounded-xl border text-[10px] font-bold uppercase tracking-widest transition-all text-center",
+                                    field.value === g.value
+                                      ? "bg-blue-500 border-blue-500 text-black shadow-xl shadow-blue-500/10"
+                                      : "bg-zinc-800/50 border-white/5 text-zinc-500 hover:border-white/20 hover:text-white"
+                                  )}
+                                >
+                                  {g.label}
+                                </button>
+                              ))}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <FormField
+                      control={form.control}
+                      name="agentAge"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-zinc-500" />
+                            <FormLabel className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Agent Age (Optional)</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min={18}
+                              max={100}
+                              {...field}
+                              value={field.value ?? ""}
+                              onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                              placeholder="e.g. 28"
+                              className="bg-black/40 border-white/5 h-12 rounded-xl focus:border-emerald-500/50 text-white placeholder:text-zinc-700 font-medium"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="defaultLanguage"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Globe className="w-4 h-4 text-zinc-500" />
+                            <FormLabel className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Default Language</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Input {...field} placeholder="e.g. en, es, fr, de" className="bg-black/40 border-white/5 h-12 rounded-xl focus:border-emerald-500/50 text-white placeholder:text-zinc-700 font-medium" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="agentAvatar"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Image className="w-4 h-4 text-zinc-500" />
+                          <FormLabel className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Avatar URL (Optional)</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input {...field} placeholder="https://example.com/avatar.png" className="bg-black/40 border-white/5 h-12 rounded-xl focus:border-emerald-500/50 text-white placeholder:text-zinc-700 font-medium" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+
               <Card className="bg-zinc-900/40 backdrop-blur-3xl border-white/5 rounded-[2.5rem] overflow-hidden group">
                 <CardHeader className="p-10 pb-4 border-b border-white/5 bg-white/[0.01]">
                   <div className="flex items-center justify-between">

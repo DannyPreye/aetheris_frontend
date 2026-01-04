@@ -12,7 +12,8 @@ import { request as __request } from '../core/request';
 export class OrganizationsService {
     /**
      * List organizations
-     * @returns any List
+     * List all organizations with their current settings and agent configuration
+     * @returns any List of organizations
      * @throws ApiError
      */
     public static getApiV1Organizations(): CancelablePromise<{
@@ -25,9 +26,9 @@ export class OrganizationsService {
     }
     /**
      * Create organization
-     * Create a new organization during user registration. WhatsApp fields (whatsappPhoneId, whatsappToken, whatsappBusinessId), website, and agent settings will be added later via dedicated endpoints.
+     * Create a new organization during user registration. Default agent settings (with neutral personality and friendly tone) are created automatically. WhatsApp connection, agent personality customization, and other settings can be updated later via dedicated endpoints.
      * @param requestBody
-     * @returns any Created
+     * @returns any Organization created successfully with default agent settings
      * @throws ApiError
      */
     public static postApiV1Organizations(
@@ -112,8 +113,9 @@ export class OrganizationsService {
     }
     /**
      * Get organization agent settings
-     * @param id
-     * @returns any Agent settings
+     * Retrieve agent personality and behavior settings for an organization. Includes name, gender, language, tone, and escalation rules.
+     * @param id Organization ID
+     * @returns any Agent settings retrieved successfully
      * @throws ApiError
      */
     public static getApiV1OrganizationsAgentSettings(
@@ -128,15 +130,16 @@ export class OrganizationsService {
                 'id': id,
             },
             errors: {
-                404: `Not found`,
+                404: `Organization not found`,
             },
         });
     }
     /**
      * Update organization agent settings
-     * @param id
+     * Update agent personality (name, gender, language) and behavior settings. Personality fields allow customization of how the agent presents itself.
+     * @param id Organization ID
      * @param requestBody
-     * @returns any Agent settings updated
+     * @returns any Agent settings updated successfully
      * @throws ApiError
      */
     public static putApiV1OrganizationsAgentSettings(
@@ -154,7 +157,7 @@ export class OrganizationsService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                404: `Not found`,
+                404: `Organization not found`,
             },
         });
     }
